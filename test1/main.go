@@ -27,11 +27,13 @@ func (p) Commands() ([]plugin.Command, error) {
 		Long:              "Long description goes here...",
 		PlaceCommandUnder: "ignite",
 		// Examples of adding subcommands:
-		Commands: []plugin.Command{
-			{Use: "add"},
-			{Use: "list"},
-			{Use: "delete"},
-		},
+		/*
+			Commands: []plugin.Command{
+				{Use: "add"},
+				{Use: "list"},
+				{Use: "delete"},
+			},
+		*/
 	}
 	// Example of adding flags
 	cmd.Flags().String("my-flag", "", "a flag example")
@@ -42,7 +44,7 @@ func (p) Commands() ([]plugin.Command, error) {
 func (p) Execute(cmd plugin.Command, args []string) error {
 	// TODO: write command execution here
 	fmt.Printf("Hello I'm the test1 plugin\n")
-	fmt.Println("My executed command: %s\n", cmd.Use)
+	fmt.Printf("My executed command: %s\n", cmd.Use)
 	fmt.Printf("My args: %v\n", args)
 	myFlag, _ := cmd.Flags().GetString("my-flag")
 	fmt.Printf("My flags: my-flag=%s\n", myFlag)
@@ -56,14 +58,16 @@ func (p) Execute(cmd plugin.Command, args []string) error {
 	_ = c
 
 	// According to the number of declared commands, you may need a switch:
-	switch cmd.Use {
-	case "add":
-		fmt.Println("Adding stuff...")
-	case "list":
-		fmt.Println("Listing stuff...")
-	case "delete":
-		fmt.Println("Deleting stuff...")
-	}
+	/*
+		switch cmd.Use {
+		case "add":
+			fmt.Println("Adding stuff...")
+		case "list":
+			fmt.Println("Listing stuff...")
+		case "delete":
+			fmt.Println("Deleting stuff...")
+		}
+	*/
 	return nil
 }
 
