@@ -42,6 +42,7 @@ func (p) Commands() ([]plugin.Command, error) {
 func (p) Execute(cmd plugin.Command, args []string) error {
 	// TODO: write command execution here
 	fmt.Printf("Hello I'm the test1 plugin\n")
+	fmt.Println("My executed command: %s\n", cmd.Use)
 	fmt.Printf("My args: %v\n", args)
 	myFlag, _ := cmd.Flags().GetString("my-flag")
 	fmt.Printf("My flags: my-flag=%s\n", myFlag)
