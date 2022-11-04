@@ -43,8 +43,9 @@ func (p) Execute(cmd plugin.Command, args []string) error {
 	// TODO: write command execution here
 	fmt.Printf("Hello I'm the test1 plugin\n")
 	fmt.Printf("My args: %v\n", args)
-	fmt.Println("My flags: my-flag=%s\n", cmd.Flags().GetString("my-flag"))
-	fmt.Println("My config parameters: %v\n", cmd.With)
+	myFlag, _ := cmd.Flags().GetString("my-flag")
+	fmt.Printf("My flags: my-flag=%s\n", myFlag)
+	fmt.Printf("My config parameters: %v\n", cmd.With)
 
 	// This is how the plugin can access the chain:
 	c, err := getChain(cmd)
