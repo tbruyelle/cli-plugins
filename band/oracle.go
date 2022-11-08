@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"path/filepath"
 
 	"github.com/gobuffalo/genny"
@@ -11,6 +12,7 @@ import (
 	"github.com/ignite/cli/ignite/pkg/multiformatname"
 	"github.com/ignite/cli/ignite/pkg/placeholder"
 	"github.com/ignite/cli/ignite/pkg/xgenny"
+	"github.com/ignite/cli/ignite/services/scaffolder"
 	"github.com/ignite/cli/ignite/templates/ibc"
 )
 
@@ -79,25 +81,23 @@ func AddOracle(
 		return sm, err
 	}
 
-	/*
-		if err := checkComponentValidity(path, moduleName, name, false); err != nil {
-			return sm, err
-		}
+	if err := scaffolder.CheckComponentValidity(path, moduleName, name, false); err != nil {
+		return sm, err
+	}
 
-		mfSigner, err := multiformatname.NewName(o.signer, checkForbiddenOracleFieldName)
-		if err != nil {
-			return sm, err
-		}
+	mfSigner, err := multiformatname.NewName(o.signer, checkForbiddenOracleFieldName)
+	if err != nil {
+		return sm, err
+	}
 
-		// Module must implement IBC
-		ok, err := isIBCModule(path, moduleName)
-		if err != nil {
-			return sm, err
-		}
-		if !ok {
-			return sm, fmt.Errorf("the module %s doesn't implement IBC module interface", moduleName)
-		}
-	*/
+	// Module must implement IBC
+	ok, err := scaffolder.IsIBCModule(path, moduleName)
+	if err != nil {
+		return sm, err
+	}
+	if !ok {
+		return sm, fmt.Errorf("the module %s doesn't implement IBC module interface", moduleName)
+	}
 
 	// Generate the packet
 	var (
@@ -108,7 +108,7 @@ func AddOracle(
 			ModulePath: modpath.RawPath,
 			ModuleName: moduleName,
 			QueryName:  name,
-			// MsgSigner:  mfSigner,
+			MsgSigner:  mfSigner,
 		}
 	)
 	g, err = ibc.NewOracle(tracer, opts)
@@ -129,4 +129,28 @@ func installBandPacket(ctx context.Context, path string) error {
 	return gocmd.Get(ctx, path, []string{
 		gocmd.PackageLiteral(bandImport, bandVersion),
 	})
+}
+
+// checkForbiddenOracleFieldName returns true if the name is forbidden as an oracle field name
+func checkForbiddenOracleFieldName(name string) error {
+	mfName, err := multiformatname.NewName(name, multiformatname.NoNumber)
+	if err != nil {
+		return err
+	}
+
+	// Check with names already used from the scaffolded code
+	switch mfName.UpperCase {
+	case
+		"CLIENTID",
+		"ORACLESCRIPTID",
+		"SOURCECHANNEL",
+		"CALLDATA",
+		"ASKCOUNT",
+		"MINCOUNT",
+		"FEELIMIT",
+		"PREPAREGAS",
+		"EXECUTEGAS":
+		return fmt.Errorf("%s is used by Starport scaffolder", name)
+	}
+	return nil
 }

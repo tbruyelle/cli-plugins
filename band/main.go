@@ -11,6 +11,7 @@ import (
 	"github.com/hashicorp/go-hclog"
 	hplugin "github.com/hashicorp/go-plugin"
 
+	ignitecmd "github.com/ignite/cli/ignite/cmd"
 	"github.com/ignite/cli/ignite/pkg/cliui"
 	"github.com/ignite/cli/ignite/pkg/placeholder"
 	"github.com/ignite/cli/ignite/services/chain"
@@ -27,7 +28,7 @@ type p struct {
 
 func (p) Commands() ([]plugin.Command, error) {
 	cmd := plugin.Command{
-		Use:               "band",
+		Use:               "band oracle-name",
 		Short:             "Scaffold an IBC BandChain query oracle to request real-time data",
 		Long:              "Scaffold an IBC BandChain query oracle to request real-time data from BandChain scripts in a specific IBC-enabled Cosmos SDK module",
 		PlaceCommandUnder: "ignite scaffold",
@@ -48,28 +49,17 @@ func (p *p) Execute(cmd plugin.Command, args []string) error {
 		signer, _  = cmd.Flags().GetString("signer")
 		module, _  = cmd.Flags().GetString("module")
 	)
-	p.logger.Error("HELLO")
-
-	fmt.Printf("oracle=%s appPath=%s signer=%s module=%s\n", oracle, appPath, signer, module)
-
-	session := cliui.New(cliui.StartSpinnerWithText("Scaffolding..."))
-	defer session.End()
-
 	if module == "" {
 		return errors.New("please specify a module to create the BandChain oracle into: --module <module_name>")
 	}
+
+	session := cliui.New(cliui.StartSpinnerWithText("Scaffolding..."))
+	defer session.End()
 
 	var options []OracleOption
 	if signer != "" {
 		options = append(options, OracleWithSigner(signer))
 	}
-
-	/*
-		sc, err := scaffolder.App(appPath)
-		if err != nil {
-			return err
-		}
-	*/
 
 	sm, err := AddOracle(context.Background(), appPath, placeholder.New(), module, oracle, options...)
 	if err != nil {
@@ -77,16 +67,12 @@ func (p *p) Execute(cmd plugin.Command, args []string) error {
 	}
 	_ = sm
 
-	// s.Stop()
+	modificationsStr, err := ignitecmd.SourceModificationToString(sm)
+	if err != nil {
+		return err
+	}
 
-	/*
-		modificationsStr, err := sourceModificationToString(sm)
-		if err != nil {
-			return err
-		}
-
-		fmt.Println(modificationsStr)
-	*/
+	fmt.Println(modificationsStr)
 
 	fmt.Printf(`
 				🎉 Created a Band oracle query "%[1]v".
