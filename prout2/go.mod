@@ -1,13 +1,11 @@
-module prout
+module prout2
 
 go 1.18
 
 require (
 	github.com/hashicorp/go-plugin v1.4.4
-	github.com/ignite/cli v0.25.2-0.20221108084050-f2752e38f71d
+	github.com/ignite/cli v0.25.2-0.20221109124914-6e45a5559c65
 )
-
-replace github.com/ignite/cli => ../../cli
 
 require (
 	cosmossdk.io/errors v1.0.0-beta.7 // indirect

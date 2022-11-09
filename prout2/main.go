@@ -21,12 +21,12 @@ type p struct{}
 
 func (p) Manifest() (plugin.Manifest, error) {
 	return plugin.Manifest{
-		Name: "prout",
+		Name: "prout2",
 		// Add commands here
 		Commands: []plugin.Command{
 			// Example of a command
 			{
-				Use:   "prout",
+				Use:   "prout2",
 				Short: "Explain what the command is doing...",
 				Long:  "Long description goes here...",
 				Flags: []plugin.Flag{
@@ -44,15 +44,13 @@ func (p) Manifest() (plugin.Manifest, error) {
 			},
 		},
 		// Add hooks here
-		Hooks: []plugin.Hook{{
-			Name: "hooking", PlaceHookOn: "ignite scaffold map",
-		}},
+		Hooks: []plugin.Hook{},
 	}, nil
 }
 
 func (p) Execute(cmd plugin.ExecutedCommand) error {
 	// TODO: write command execution here
-	fmt.Printf("Hello I'm the prout plugin\n")
+	fmt.Printf("Hello I'm the prout2 plugin\n")
 	fmt.Printf("My executed command: %q\n", cmd.Use)
 	fmt.Printf("My args: %v\n", cmd.Args)
 	myFlag, _ := cmd.Flags().GetString("my-flag")
@@ -82,11 +80,6 @@ func (p) Execute(cmd plugin.ExecutedCommand) error {
 
 func (p) ExecuteHookPre(hook plugin.ExecutedHook) error {
 	fmt.Printf("Executing hook pre %q\n", hook.Name)
-	indexes, err := hook.Flags().GetStringSlice("index")
-	fmt.Printf("indexes %q %v\n", indexes, err)
-	for i, idx := range indexes {
-		fmt.Printf("flags %d %q\n", i, idx)
-	}
 	return nil
 }
 
@@ -117,7 +110,7 @@ func getChain(cmd plugin.ExecutedCommand, chainOption ...chain.Option) (*chain.C
 
 func main() {
 	pluginMap := map[string]hplugin.Plugin{
-		"prout": &plugin.InterfacePlugin{Impl: &p{}},
+		"prout2": &plugin.InterfacePlugin{Impl: &p{}},
 	}
 
 	hplugin.Serve(&hplugin.ServeConfig{
