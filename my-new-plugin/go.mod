@@ -1,13 +1,11 @@
-module prout
+module my-new-plugin
 
 go 1.18
 
 require (
 	github.com/hashicorp/go-plugin v1.4.4
-	github.com/ignite/cli v0.25.2-0.20221108084050-f2752e38f71d
+	github.com/ignite/cli v0.25.2-0.20221109124914-6e45a5559c65
 )
-
-replace github.com/ignite/cli => ../../cli
 
 require (
 	cosmossdk.io/errors v1.0.0-beta.7 // indirect
@@ -98,7 +96,6 @@ require (
 	github.com/hashicorp/yamux v0.0.0-20180604194846-3520598351bb // indirect
 	github.com/hdevalence/ed25519consensus v0.0.0-20220222234857-c00d1f31bab3 // indirect
 	github.com/iancoleman/strcase v0.2.0 // indirect
-	github.com/ignite/web v0.4.3 // indirect
 	github.com/imdario/mergo v0.3.13 // indirect
 	github.com/inconshreveable/mousetrap v1.0.1 // indirect
 	github.com/jbenet/go-context v0.0.0-20150711004518-d14ea06fba99 // indirect
@@ -155,6 +152,7 @@ require (
 	github.com/stretchr/testify v1.8.0 // indirect
 	github.com/subosito/gotenv v1.4.1 // indirect
 	github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7 // indirect
+	github.com/takuoki/gocase v1.1.1 // indirect
 	github.com/tendermint/btcd v0.1.1 // indirect
 	github.com/tendermint/crypto v0.0.0-20191022145703-50d29ede1e15 // indirect
 	github.com/tendermint/go-amino v0.16.0 // indirect
