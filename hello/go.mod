@@ -1,4 +1,4 @@
-module my-new-plugin
+module hello
 
 go 1.18
 

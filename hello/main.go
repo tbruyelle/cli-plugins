@@ -21,26 +21,14 @@ type p struct{}
 
 func (p) Manifest() (plugin.Manifest, error) {
 	return plugin.Manifest{
-		Name: "my-new-plugin",
+		Name: "hello",
 		// Add commands here
 		Commands: []plugin.Command{
 			// Example of a command
 			{
-				Use:   "my-new-plugin",
-				Short: "Explain what the command is doing...",
-				Long:  "Long description goes here...",
-				Flags: []plugin.Flag{
-					{Name: "my-flag", Type: plugin.FlagTypeString, Usage: "my flag description"},
-				},
+				Use:               "hello",
+				Short:             "Say hello",
 				PlaceCommandUnder: "ignite",
-				// Examples of adding subcommands:
-				/*
-					Commands: []plugin.Command{
-						{Use: "add"},
-						{Use: "list"},
-						{Use: "delete"},
-					},
-				*/
 			},
 		},
 		// Add hooks here
@@ -49,43 +37,19 @@ func (p) Manifest() (plugin.Manifest, error) {
 }
 
 func (p) Execute(cmd plugin.ExecutedCommand) error {
-	// TODO: write command execution here
-	fmt.Printf("Hello I'm the my-new-plugin plugin\n")
-	fmt.Printf("My executed command: %q\n", cmd.Path)
-	fmt.Printf("My args: %v\n", cmd.Args)
-	myFlag, _ := cmd.Flags().GetString("my-flag")
-	fmt.Printf("My flags: my-flag=%q\n", myFlag)
-	fmt.Printf("My config parameters: %v\n", cmd.With)
-
-	// This is how the plugin can access the chain:
-	// c, err := getChain(cmd)
-
-	// According to the number of declared commands, you may need a switch:
-	/*
-		switch cmd.Use {
-		case "add":
-			fmt.Println("Adding stuff...")
-		case "list":
-			fmt.Println("Listing stuff...")
-		case "delete":
-			fmt.Println("Deleting stuff...")
-		}
-	*/
+	fmt.Printf("Hello from plugin\n")
 	return nil
 }
 
 func (p) ExecuteHookPre(hook plugin.ExecutedHook) error {
-	fmt.Printf("Executing hook pre %q\n", hook.Name)
 	return nil
 }
 
 func (p) ExecuteHookPost(hook plugin.ExecutedHook) error {
-	fmt.Printf("Executing hook post %q\n", hook.Name)
 	return nil
 }
 
 func (p) ExecuteHookCleanUp(hook plugin.ExecutedHook) error {
-	fmt.Printf("Executing hook cleanup %q\n", hook.Name)
 	return nil
 }
 
@@ -106,7 +70,7 @@ func getChain(cmd plugin.ExecutedCommand, chainOption ...chain.Option) (*chain.C
 
 func main() {
 	pluginMap := map[string]hplugin.Plugin{
-		"my-new-plugin": &plugin.InterfacePlugin{Impl: &p{}},
+		"hello": &plugin.InterfacePlugin{Impl: &p{}},
 	}
 
 	hplugin.Serve(&hplugin.ServeConfig{

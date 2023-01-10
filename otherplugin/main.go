@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/gob"
 	"fmt"
+	"os/exec"
 	"path/filepath"
 
 	hplugin "github.com/hashicorp/go-plugin"
@@ -44,18 +45,15 @@ func (p) Manifest() (plugin.Manifest, error) {
 			},
 		},
 		// Add hooks here
-		Hooks: []plugin.Hook{},
+		Hooks: []plugin.Hook{
+			{Name: "prout", PlaceHookOn: "ignite chain serve"},
+		},
 	}, nil
 }
 
 func (p) Execute(cmd plugin.ExecutedCommand) error {
 	// TODO: write command execution here
-	fmt.Printf("Hello I'm the otherplugin plugin\n")
-	fmt.Printf("My executed command: %q\n", cmd.Path)
-	fmt.Printf("My args: %v\n", cmd.Args)
-	myFlag, _ := cmd.Flags().GetString("my-flag")
-	fmt.Printf("My flags: my-flag=%q\n", myFlag)
-	fmt.Printf("My config parameters: %v\n", cmd.With)
+	fmt.Printf("Hello I'm the otherplugin plugin %v\n", c)
 
 	// This is how the plugin can access the chain:
 	// c, err := getChain(cmd)
@@ -74,8 +72,13 @@ func (p) Execute(cmd plugin.ExecutedCommand) error {
 	return nil
 }
 
+var c *exec.Cmd
+
 func (p) ExecuteHookPre(hook plugin.ExecutedHook) error {
 	fmt.Printf("Executing hook pre %q\n", hook.Name)
+	c = exec.Command("ls")
+	fmt.Printf("HOOK %v\n", c)
+
 	return nil
 }
 
