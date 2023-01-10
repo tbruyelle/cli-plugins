@@ -22,26 +22,29 @@ type p struct{}
 func (p) Manifest() (plugin.Manifest, error) {
 	return plugin.Manifest{
 		Name: "hello",
-		// Add commands here
 		Commands: []plugin.Command{
-			// Example of a command
 			{
 				Use:               "hello",
 				Short:             "Say hello",
 				PlaceCommandUnder: "ignite",
 			},
 		},
-		// Add hooks here
-		Hooks: []plugin.Hook{},
+		Hooks: []plugin.Hook{
+			{
+				Name:        "hello",
+				PlaceHookOn: "ignite chain init",
+			},
+		},
 	}, nil
 }
 
 func (p) Execute(cmd plugin.ExecutedCommand) error {
-	fmt.Printf("Hello from plugin\n")
+	fmt.Println("Hello from plugin")
 	return nil
 }
 
 func (p) ExecuteHookPre(hook plugin.ExecutedHook) error {
+	fmt.Println("Hello chain init")
 	return nil
 }
 
